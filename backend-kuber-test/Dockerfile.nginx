@@ -1,0 +1,7 @@
+# Using base image provided by nginx unit
+FROM nginx
+# Alternatively you can use different tags from https://hub.docker.com/r/nginx/unit
+
+ADD default.conf /etc/nginx/conf.d/
+
+ADD index.html script.js /usr/share/nginx/html/

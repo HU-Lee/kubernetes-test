@@ -1,0 +1,14 @@
+FROM node:15-alpine as builder
+
+# 워크 디렉토리 설정
+WORKDIR /app
+
+# 환경 변수 설정
+ENV PATH /app/node_modules/.bin:$PATH
+
+COPY . /app
+
+RUN npm install
+CMD ["npm", "run", "build"]
+
+

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: covid-front
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: covid-front
+  template:
+    metadata:
+      labels:
+        app: covid-front
+    spec:
+      initContainers:
+      - name: react-test
+        image: haulrest/react-test
+        volumeMounts:
+        - name: shared-storage
+          mountPath: /app/dist
+      containers:
+      - name: nginx-front-test
+        image: haulrest/nginx-front-test
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: shared-storage
+          mountPath: /usr/share/nginx/html
+
+      volumes:
+        - name : shared-storage
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: covid-front
+spec:
+  type: LoadBalancer
+  selector:
+    app: covid-front
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    nodePort: 32000

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: covid-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: covid-backend
+  template:
+    metadata:
+      labels:
+        app: covid-backend
+    spec:
+      containers:
+      - name: covid-backend
+        image: haulrest/python-test
+      # - name: oracle-server
+      #   image: haulrest/oracleserver
+      - name: nginx-backend
+        image: haulrest/nginx-backend-test
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: covid-backend
+spec:
+  type: LoadBalancer
+  selector:
+    app: covid-backend
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30987

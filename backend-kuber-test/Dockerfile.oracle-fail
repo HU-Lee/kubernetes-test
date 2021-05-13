@@ -1,0 +1,19 @@
+FROM oraclelinux:7-slim
+
+RUN yum install libaio1 wget unzip -y
+
+WORKDIR /opt/oracle
+RUN wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip && \
+    unzip instantclient-basiclite-linuxx64.zip && rm -f instantclient-basiclite-linuxx64.zip && \
+    cd /opt/oracle/instantclient* && rm -f *jdbc* *occi* *mysql* *README *jar uidrvci genezi adrci && \
+    echo /opt/oracle/instantclient* > /etc/ld.so.conf.d/oracle-instantclient.conf && ldconfig
+
+COPY ./wallet /opt/oracle/instantclient/network/admin/
+
+
+
+# Uncomment if the tools package is added
+# ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
+
+# CMD ["sleep", "1d"]
+CMD ["mv", "/opt/oracle/", "/share/"]
